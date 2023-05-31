@@ -1,6 +1,8 @@
 /* Vendor_styles */
 @import "../vendor/normalize.css";
 
+/* Vendor_fonts */
+@import "../vendor/fonts/fonts.css";
 
 /* Page */
 @import "../blocks/page/page.css";
@@ -20,3 +22,4 @@
 @import "../blocks/profile/__info/profile__info.css";
 @import "../blocks/profile/__name/profile__name.css";
 @import "../blocks/profile/__status/profile__status.css";
+@import "../blocks/profile/__avatar/profile__avatar.css";
