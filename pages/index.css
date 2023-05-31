@@ -1,6 +1,8 @@
 /* Vendor_styles */
 @import "../vendor/normalize.css";
 
+/* Vendor_fonts */
+@import "../vendor/fonts/fonts.css";
 
 /* Page */
 @import "../blocks/page/page.css";
@@ -8,3 +10,16 @@
 /* Header */
 @import "../blocks/header/header.css";
 @import "../blocks/header/__logo/header__logo.css";
+
+/* Content */
+@import "../blocks/content/content.css";
+
+/* Content-Profile */
+@import "../blocks/profile/profile.css";
+@import "../blocks/profile/__add-button/profile__add-button.css";
+@import "../blocks/profile/__avatar/profile__avatar.css";
+@import "../blocks/profile/__edit-button/profile__edit-button.css";
+@import "../blocks/profile/__info/profile__info.css";
+@import "../blocks/profile/__name/profile__name.css";
+@import "../blocks/profile/__status/profile__status.css";
+@import "../blocks/profile/__avatar/profile__avatar.css";
