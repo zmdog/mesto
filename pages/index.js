@@ -40,3 +40,8 @@ function PopUp() {
         this.popUpModal.classList.toggle('popup_opened')
     }
 }
+
+/* Переключатель для лайков*/
+function likeStatus(elem){
+    elem.classList.toggle('element__like_active')
+}
