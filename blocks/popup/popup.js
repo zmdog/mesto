@@ -12,7 +12,7 @@ function PopUp() {
         this.popUpStatus.value = this.popUpInputPlaceHolder(".profile__status")
 
         /* Отображение попАпа*/
-        this.popUpState(true)
+        this.popUpState()
     }
 
     /* Функция меняет имя и статус, а также скрывает попАп */
@@ -24,7 +24,7 @@ function PopUp() {
         /* Меняю данные */
         this.popUpName.innerHTML = this.popUpInputPlaceHolder(".popup__edit-name");
         this.popUpStatus.innerHTML = this.popUpInputPlaceHolder(".popup__edit-status")
-        this.popUpState(false)
+        this.popUpState()
     }
 
     /* Функция возвращает текст передаваемого класса элемента с унифицированным применением*/
@@ -36,7 +36,7 @@ function PopUp() {
     }
 
     /* Функция скрывает или показывает попАп */
-    this.popUpState = function(state){
-        state? this.popUpModal.style.display = 'flex': this.popUpModal.style.display = 'none';
+    this.popUpState = function(){
+        this.popUpModal.classList.toggle('popup_opened')
     }
 }

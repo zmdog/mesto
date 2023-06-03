@@ -9,3 +9,13 @@
     background-color: transparent;
     align-self: end;
 }
+
+@media screen and (max-width: 880px) {
+    .popup__close-button {
+        width: 20px;
+        height: 20px;
+        background-size: cover;
+        right: 0;
+        top: -36px;
+    }
+}

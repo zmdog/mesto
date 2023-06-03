@@ -9,3 +9,13 @@
     background-size: 10px;
     background-position: center;
 }
+
+@media screen and (max-width: 880px) {
+    .profile__edit-button {
+        position: absolute;
+        right: -26px;
+        width: 18px;
+        height: 18px;
+        background-size: 7.5px;
+    }
+}
