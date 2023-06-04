@@ -1,8 +1,8 @@
-.popup__modal-form {
+.popup__container {
     top: 195px;
-    width: 430px;
-    position: absolute;
+    width: calc(430/1280 * 100%);
     display: flex;
+    position: sticky;
     flex-direction: column;
     z-index: 1;
     background-color: #FFF;
@@ -13,8 +13,7 @@
 }
 
 @media screen and (max-width: 880px) {
-    .popup__modal-form {
-        top: 123px;
+    .popup__container {
         width: 282px;
         padding: 25px 22px;
     }

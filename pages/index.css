@@ -46,8 +46,7 @@
 @import "../blocks/popup/popup.css";
 @import "../blocks/popup/__edit/popup__edit.css";
 @import "../blocks/popup/__purpose/popup__purpose.css";
-@import "../blocks/popup/__modal-form/popup__modal-form.css";
+@import "../blocks/popup/__container/popup__container.css";
 @import "../blocks/popup/__close-button/popup__close-button.css";
 @import "../blocks/popup/__save-button/popup__save-button.css";
-@import "../blocks/popup/__edits/popups__edits.css";
 @import "../blocks/popup/_opened/popup_opened.css";
