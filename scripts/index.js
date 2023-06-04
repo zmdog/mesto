@@ -4,7 +4,11 @@ let popUpModal = document.querySelector(".popup"),
         {element: document.querySelectorAll('.popup__save-button'), event: 'submit', func: popUpSaveChanges},
         {element: document.querySelectorAll('.profile__edit-button'), event: 'click', func: popUpOpen},
         {element: document.querySelectorAll('.popup__close-button'), event: 'click', func: popUpClose},
-        {element: document.querySelectorAll('.profile__add-button'), event: 'click', func: () => console.log("В разработке")},
+        {
+            element: document.querySelectorAll('.profile__add-button'),
+            event: 'click',
+            func: () => console.log("В разработке")
+        },
     ]
 
 /* Перебор массива с параметрами(elem: массив кнопок с классом и func: используемая ими функция) */
