@@ -18,48 +18,48 @@ buttons.map((elemArr) => {
     elemArr.element.forEach((elemClass) => {
 
         elemClass.addEventListener(elemArr.event, function (event) {
-            elemArr.func(event)
+            elemArr.func(event);
         })
     })
 })
 
 /* Переключатель для лайков*/
 function likeStatus(event) {
-    event.target.classList.toggle('element__like_active')
+    event.target.classList.toggle('element__like_active');
 }
 
 /*Функция скрывает или показывает попАп */
 function popUpShow() {
-    popUpModal.classList.add('popup_opened')
+    popUpModal.classList.add('popup_opened');
 }
 
 function popUpClose() {
-    popUpModal.classList.remove('popup_opened')
+    popUpModal.classList.remove('popup_opened');
 }
 
 /*Функция Меняет содержимое инпутов и отображает попап */
 function popUpOpen() {
     let profileName = document.querySelector(".profile__name"),
-        profileStatus = document.querySelector(".profile__status")
+        profileStatus = document.querySelector(".profile__status");
 
     /* Меняю содержимое инпутов */
-    document.querySelector(".popup__edit[name='name']").value = profileName.textContent
-    document.querySelector(".popup__edit[name='status']").value = profileStatus.textContent
+    document.querySelector(".popup__edit[name='name']").value = profileName.textContent;
+    document.querySelector(".popup__edit[name='status']").value = profileStatus.textContent;
 
     /* Отображение попАпа*/
-    popUpShow()
+    popUpShow();
 }
 
 /* Функция меняет имя и статус, а также скрывает попАп */
 function popUpSaveChanges() {
 
     let profileName = document.querySelector(".popup__edit[name='name']"),
-        profileStatus = document.querySelector(".popup__edit[name='status']")
+        profileStatus = document.querySelector(".popup__edit[name='status']");
 
     /* Меняю данные профиля */
-    document.querySelector(".profile__name").innerHTML = profileName.value
-    document.querySelector(".profile__status").innerHTML = profileStatus.value
+    document.querySelector(".profile__name").innerHTML = profileName.value;
+    document.querySelector(".profile__status").innerHTML = profileStatus.value;
 
     /* Скрываю попап */
-    popUpClose()
+    popUpClose();
 }
