@@ -3,7 +3,7 @@ let popUpModal = document.querySelector(".popup"),
         {element: document.querySelectorAll('.elements__elements-grid'), event: 'click', func: likeStatus},
         {element: document.querySelectorAll('.popup__save-button'), event: 'submit', func: popUpSaveChanges},
         {element: document.querySelectorAll('.profile__edit-button'), event: 'click', func: popUpOpen},
-        {element: document.querySelectorAll('.popup__close-button'), event: 'click', func: popUpClose},
+        {element: document.querySelectorAll('.popup__close-button'), event: 'click', func: popUpState},
         {
             element: document.querySelectorAll('.profile__add-button'),
             event: 'click',
@@ -17,24 +17,24 @@ buttons.map((elemArr) => {
     /*далее перебираю массив кнопок с классами и присваиваю им функцию из массива с параметрами*/
     elemArr.element.forEach((elemClass) => {
 
-        elemClass.addEventListener(elemArr.event, function (event) {
-            elemArr.func(event);
-        })
+        elemClass.addEventListener(elemArr.event, () => elemArr.func())
     })
 })
 
-/* Переключатель для лайков*/
-function likeStatus(event) {
-    event.target.classList.toggle('element__like_active');
+/* Подвязка слушателя к таблице */
+document.querySelector('.elements__elements-grid').addEventListener('click', likeStatus)
+
+/* Переключатель для лайков. Выводит ошибку*/
+function likeStatus (event) {
+
+    if (event.target.classList.contains('element__like')) event.target.classList.toggle('element__like_active')
 }
 
 /*Функция скрывает или показывает попАп */
-function popUpShow() {
-    popUpModal.classList.add('popup_opened');
-}
-
-function popUpClose() {
-    popUpModal.classList.remove('popup_opened');
+function popUpState() {
+    document.querySelector('.popup_opened')?
+        popUpModal.classList.remove('popup_opened') :
+        popUpModal.classList.add('popup_opened');
 }
 
 /*Функция Меняет содержимое инпутов и отображает попап */
@@ -47,7 +47,7 @@ function popUpOpen() {
     document.querySelector(".popup__edit[name='status']").value = profileStatus.textContent;
 
     /* Отображение попАпа*/
-    popUpShow();
+    popUpState();
 }
 
 /* Функция меняет имя и статус, а также скрывает попАп */
@@ -61,5 +61,5 @@ function popUpSaveChanges() {
     document.querySelector(".profile__status").innerHTML = profileStatus.value;
 
     /* Скрываю попап */
-    popUpClose();
+    popUpState();
 }
