@@ -1,8 +1,6 @@
-.popup__container {
-    top: 195px;
+.popup__wrapper {
+    position: absolute;
     width: calc(430/1280 * 100%);
-    display: flex;
-    position: sticky;
     flex-direction: column;
     z-index: 1;
     background-color: #FFF;
@@ -13,7 +11,7 @@
 }
 
 @media screen and (max-width: 880px) {
-    .popup__container {
+    .popup__wrapper {
         width: 282px;
         padding: 25px 22px;
     }
