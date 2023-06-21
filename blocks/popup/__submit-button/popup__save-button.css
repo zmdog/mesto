@@ -1,4 +1,4 @@
-.popup__save-button {
+.popup__submit-button {
     margin: 48px auto 0 auto;
     width: 100%;
     border-radius: 2px;
@@ -11,7 +11,7 @@
 }
 
 @media screen and (max-width: 880px) {
-    .popup__save-button {
+    .popup__submit-button {
         margin-top: 46px;
         font-size: 14px;
         line-height: 17px;
