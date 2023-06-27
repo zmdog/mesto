@@ -54,5 +54,5 @@
 @import "../blocks/popup/_image/popup_image.css";
 @import "../blocks/popup/__image/popup__image.css";
 @import "../blocks/popup/__title/popup__title.css";
-@import "../blocks/popup/__wrapper/popup__wrapper.css";
+@import "../blocks/popup/__wrapper/_default/popup__wrapper_default.css";
 @import "../blocks/popup/__wrapper/_image/popup__wrapper_image.css";
