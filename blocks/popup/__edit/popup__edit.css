@@ -1,7 +1,7 @@
 .popup__edit {
     width: 100%;
     border: none;
-    border-bottom: 1px solid saddlebrown;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
     padding: 0;
     margin-bottom: 0;
     font-weight: 400;

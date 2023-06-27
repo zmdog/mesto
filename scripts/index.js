@@ -1,191 +1,136 @@
-const
-    initialCards = [
-        {
-            name: 'Горы Архыза',
-            link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg'
-        },
-        {
-            name: 'Челябинская область',
-            link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg'
-        },
-        {
-            name: 'Иваново',
-            link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg'
-        },
-        {
-            name: 'Камчатка',
-            link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg'
-        },
-        {
-            name: 'Холмогорский район',
-            link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg'
-        },
-        {
-            name: 'Байкал',
-            link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg'
-        }
-    ],
-    popUpModal = document.querySelector(".popup"),
-    /* шаблон для карточек*/
-    elementTemplate = document.querySelector(".element-template"),
-    formTemplate = document.querySelector('.form-template'),
-    imageTemplate = document.querySelector('.image-template'),
-    /* контейнер для карточек*/
-    elementGrid = document.querySelector(".elements__elements-grid"),
-    /* Элементы шапки профиля */
-    profileName = document.querySelector(".profile__name"),
-    profileStatus = document.querySelector(".profile__status"),
-    profileAddButton = document.querySelector('.profile__add-button'),
-    profileEditButton = document.querySelector('.profile__edit-button');
-let popUpCloseButton;
-/* Инструкция для присвоения типа и слушателя к элементам дерева*/
-const buttons = [
-    {element: elementGrid, event: 'click', func: toggleLikeStatus},
-    {element: profileEditButton, event: 'click', func: openPopUp},
-    {element: profileAddButton, event: 'click', func: openPopUp},
-];
+import {initialCards} from './initial-cards.js'
+
+/* попапы*/
+const popUpModalProfile = document.querySelector(".popup_profile");
+const popUpModalPlace = document.querySelector(".popup_place");
+const popUpModalImage = document.querySelector(".popup_image");
+/* кнопки закрытия*/
+const popUpProfileCloseButton = popUpModalProfile.querySelector('.popup__close-button_profile');
+const popUpPlaceCloseButton = popUpModalPlace.querySelector('.popup__close-button_place');
+const popUpImageCloseButton = popUpModalImage.querySelector('.popup__close-button_image');
+/* кнопки подтверждения*/
+const popUpSaveButton = popUpModalProfile.querySelector('.popup__submit-button_profile');
+const popUpAddButton = popUpModalPlace.querySelector('.popup__submit-button_place');
+/* шаблон для карточек*/
+const elementTemplate = document.querySelector(".element-template");
+/* контейнер для карточек*/
+const elementGrid = document.querySelector(".elements__elements-grid");
+/* Элементы шапки профиля */
+const profileName = document.querySelector(".profile__name");
+const profileStatus = document.querySelector(".profile__status");
+const profileAddButton = document.querySelector('.profile__add-button');
+const profileEditButton = document.querySelector('.profile__edit-button');
 
 /* Отрисовка всех имеющихся карточек из массива initialCards */
 initialCards.forEach(elem => {
-    const
-        element = elementTemplate.content.cloneNode(true),
-        photo = element.querySelector('.element__photo'),
-        elementTitle = element.querySelector('.element__title'),
-        likeBtn = element.querySelector('.element__like');
-
-    photo.src = elem.link;
-    photo.alt = 'Фото ' + elem.name;
-    photo.ariaLabel = 'Фото ' + elem.name;
-    elementTitle.textContent = elem.name;
-    likeBtn.ariaLabel = 'Поставить лайк фото ' + elem.name;
-    elementGrid.append(element);
+    elementGrid.prepend(createCard(elem.name, elem.link));
 })
-elementGrid.addEventListener('click', event => deleteCard(event))
-elementGrid.addEventListener('click', event => popUpImage(event))
 
-/* Перебор массива с параметрами(elem: массив кнопок с классом и func: используемая ими функция) */
-buttons.forEach((elemArr) => {
-    elemArr.element.addEventListener(elemArr.event, event => elemArr.func(event))
-})
+elementGrid.addEventListener('click', event => toggleLikeStatus(event));
+profileAddButton.addEventListener('click', () => checkPopUpPlaceState(true));
+profileEditButton.addEventListener('click', () => checkPopUpProfileState(true));
+popUpProfileCloseButton.addEventListener('click', () => checkPopUpProfileState(false));
+popUpPlaceCloseButton.addEventListener('click', () => checkPopUpPlaceState(false));
+popUpImageCloseButton.addEventListener('click', () => checkPopUpImageState(false));
+popUpSaveButton.addEventListener('click', event => savePopUpProfile(event));
+popUpAddButton.addEventListener('click', event => savePopUpPlace(event));
 
 /* Переключатель для лайков */
 function toggleLikeStatus(event) {
     if (event.target.classList.contains('element__like')) event.target.classList.toggle('element__like_active');
 }
-
+/* Удаление карточек */
 function deleteCard(event) {
-    if (event.target.classList.contains('element__delete')) event.target.closest('li').remove();
+    event.target.closest('.wrapper-element').remove();
 }
 
-function popUpImage(event) {
-    console.log(event.target)
-    if (event.target.classList.contains('element__photo')) {
-        const
-            formImage = imageTemplate.content.cloneNode(true),
-            popupImage = formImage.querySelector('.popup__image'),
-            titleImage = formImage.querySelector('.popup__title'),
-            titleElement = event.target.closest('.element').querySelector('.element__title');
-        titleImage.textContent = titleElement.textContent
-        popUpCloseButton = formImage.querySelector('.popup__close-button')
-        popUpCloseButton.addEventListener('click', () => {
-            checkPopUpState(false)
-        })
-        popupImage.src = event.target.src
-        popupImage.alt = event.target.alt;
-        popupImage.ariaLabel = event.target.ariaLabel;
-        checkPopUpState(formImage)
-    }
-}
+/*Функция скрывает или показывает попАп профиль */
+function checkPopUpProfileState(state) {
+    if (state) {
+        const popUpName = popUpModalProfile.querySelector(".popup__edit[name='name']");
+        const popUpStatus = popUpModalProfile.querySelector(".popup__edit[name='status']");
 
-/*Функция скрывает или показывает попАп */
-function checkPopUpState(form) {
-    if (form) {
-        popUpModal.append(form)
-        popUpModal.classList.add('popup_opened')
-        popUpModal.classList.remove('popup_closed')
+        popUpName.value = profileName.textContent;
+        popUpStatus.value = profileStatus.textContent;
+        popUpModalProfile.classList.add('popup_opened');
+        popUpModalProfile.classList.remove('popup_closed');
     } else {
-        popUpModal.classList.add('popup_closed')
+        popUpModalProfile.classList.add('popup_closed');
         setTimeout(function () {
-            popUpModal.classList.remove('popup_opened');
-            (popUpCloseButton.closest('.popup__wrapper') || popUpCloseButton.closest('.popup__wrapper_image')).remove()
+            popUpModalProfile.classList.remove('popup_opened');
         }, 190);
     }
 }
-
-/*Функция Меняет содержимое инпутов и отображает попап */
-function openPopUp(event) {
-    const
-        form = formTemplate.content.cloneNode(true),
-        popUpContainer = form.querySelector('.popup__container'),
-        popUpPurpose = form.querySelector('.popup__purpose'),
-        popUpNamePlace = form.querySelector(".popup__edit[name='name/place']"),
-        popUpStatusLink = form.querySelector(".popup__edit[name='status/link']"),
-        popUpSaveButton = form.querySelector('.popup__submit-button');
-    let purpose;
-
-    popUpCloseButton = form.querySelector('.popup__close-button')
-
-    popUpCloseButton.addEventListener('click', () => {
-        checkPopUpState(false)
-    })
-    popUpContainer.addEventListener('submit', e => {
-        e.preventDefault()
-        popUpSaveChanges(purpose)
-    })
-
-    if (event.target.classList.contains('profile__add-button')) {
-        /* если добавляем место, то редактируем цель, обнуляем инпуты и устанавливаем плейсхолдеры */
-        purpose = 'place'
-        popUpPurpose.textContent = 'Новое место'
-        popUpNamePlace.placeholder = 'Название'
-        popUpStatusLink.placeholder = 'Ссылка на картинку'
-        popUpSaveButton.textContent = 'Создать'
-    } else if (event.target.classList.contains('profile__edit-button')) {
-        /* если редактируем профиль, то редактируем цель и актуализируем инпуты */
-        purpose = 'profile'
-        popUpPurpose.textContent = 'Редактировать профиль'
-        popUpNamePlace.value = profileName.textContent;
-        popUpStatusLink.value = profileStatus.textContent;
-        popUpSaveButton.textContent = 'Сохранить'
+/*Функция скрывает или показывает попАп места */
+function checkPopUpPlaceState(state) {
+    if (state) {
+        popUpModalPlace.classList.add('popup_opened');
+        popUpModalPlace.classList.remove('popup_closed');
+    } else {
+        popUpModalPlace.classList.add('popup_closed');
+        setTimeout(function () {
+            popUpModalPlace.classList.remove('popup_opened');
+        }, 190);
     }
+}
+/*Функция скрывает или показывает попАп фото */
+function checkPopUpImageState(state, event) {
+    if (state) {
 
-    /* Отображение попАпа*/
-    checkPopUpState(form);
+        const popUpImage = popUpModalImage.querySelector('.popup__image');
+        const popUpTitle = popUpModalImage.querySelector('.popup__title');
+
+        popUpImage.src = event.target.src;
+        popUpImage.ariaLabel = event.target.ariaLabel;
+        popUpImage.alt = event.target.alt;
+        popUpTitle.textContent = event.target.nextElementSibling.firstElementChild.textContent;
+
+        popUpModalImage.classList.add('popup_opened');
+        popUpModalImage.classList.remove('popup_closed');
+    } else {
+        popUpModalImage.classList.add('popup_closed');
+        setTimeout(function () {
+            popUpModalImage.classList.remove('popup_opened');
+        }, 190);
+    }
+}
+/* сохранение изменений профиля */
+function savePopUpProfile(event) {
+    event.preventDefault();
+
+    const popUpName = popUpModalProfile.querySelector(".popup__edit[name='name']");
+    const popUpStatus = popUpModalProfile.querySelector(".popup__edit[name='status']");
+    profileName.textContent = popUpName.value;
+    profileStatus.textContent = popUpStatus.value;
+    checkPopUpProfileState(false)
+}
+/* сохранение новой карточки  */
+function savePopUpPlace(event) {
+    event.preventDefault();
+
+    const popUpPlace = popUpModalPlace.querySelector(".popup__edit[name='place']");
+    const popUpLink = popUpModalPlace.querySelector(".popup__edit[name='link']");
+    elementGrid.prepend(createCard(popUpPlace.value, popUpLink.value));
+    checkPopUpPlaceState(false);
 }
 
-/* Функция меняет имя и статус, а также скрывает попАп */
-function popUpSaveChanges(purpose) {
-    const
-        popUpNamePlace = popUpModal.querySelector(".popup__edit[name='name/place']"),
-        popUpStatusLink = popUpModal.querySelector(".popup__edit[name='status/link']")
+/* Создание и возврат карточки */
+function createCard(name, link) {
 
-    /* Меняю данные профиля */
-    switch (purpose) {
-        case 'place': {
-            const
-                element = elementTemplate.content.cloneNode(true),
-                photo = element.querySelector('.element__photo'),
-                elementTitle = element.querySelector('.element__title'),
-                elementBtn = element.querySelector('.element__like');
+    const element = elementTemplate.content.cloneNode(true);
+    const photo = element.querySelector('.element__photo');
+    const elementTitle = element.querySelector('.element__title');
+    const elementBtn = element.querySelector('.element__like');
+    const elementDelete = element.querySelector('.element__delete');
 
-            photo.src = popUpStatusLink.value;
-            photo.alt = 'Фото ' + popUpNamePlace.value;
-            photo.ariaLabel = 'Фото ' + popUpNamePlace.value;
-            elementTitle.textContent = popUpNamePlace.value;
-            elementBtn.ariaLabel = 'Поставить лайк фото ' + popUpNamePlace.value;
+    photo.src = link;
+    photo.alt = 'Фото ' + name;
+    photo.ariaLabel = 'Фото ' + name;
+    elementTitle.textContent = name;
+    elementBtn.ariaLabel = 'Поставить лайк фото ' + name;
+    elementDelete.addEventListener('click', event => deleteCard(event));
+    photo.addEventListener('click', event => checkPopUpImageState(true, event));
 
-            elementGrid.prepend(element);
-            break
-        }
-
-        case 'profile': {
-            profileName.textContent = popUpNamePlace.value
-            profileStatus.textContent = popUpStatusLink.value
-            break
-        }
-    }
-
-    /* Скрываю попап */
-    checkPopUpState(false);
+    return element
 }
 

@@ -1,6 +1,7 @@
 .popup__wrapper {
     position: absolute;
     width: calc(430/1280 * 100%);
+    max-width: 430px;
     flex-direction: column;
     z-index: 1;
     background-color: #FFF;
