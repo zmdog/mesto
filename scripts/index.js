@@ -4,13 +4,22 @@ import {initialCards} from './initial-cards.js'
 const popUpModalProfile = document.querySelector(".popup_profile");
 const popUpModalPlace = document.querySelector(".popup_place");
 const popUpModalImage = document.querySelector(".popup_image");
+/* инпуты попапа профиля */
+const popUpName = popUpModalProfile.querySelector(".popup__edit[name='name']");
+const popUpStatus = popUpModalProfile.querySelector(".popup__edit[name='status']");
+/* инпуты попапа место */
+const popUpPlace = popUpModalPlace.querySelector(".popup__edit[name='place']");
+const popUpLink = popUpModalPlace.querySelector(".popup__edit[name='link']");
+/* контейнеры попапа фото */
+const popUpImage = popUpModalImage.querySelector('.popup__image');
+const popUpTitle = popUpModalImage.querySelector('.popup__title');
 /* кнопки закрытия*/
 const popUpProfileCloseButton = popUpModalProfile.querySelector('.popup__close-button_profile');
 const popUpPlaceCloseButton = popUpModalPlace.querySelector('.popup__close-button_place');
 const popUpImageCloseButton = popUpModalImage.querySelector('.popup__close-button_image');
 /* кнопки подтверждения*/
-const popUpSaveButton = popUpModalProfile.querySelector('.popup__submit-button_profile');
-const popUpAddButton = popUpModalPlace.querySelector('.popup__submit-button_place');
+const popUpSave = popUpModalProfile.querySelector('.popup__container');
+const popUpAdd = popUpModalPlace.querySelector('.popup__container');
 /* шаблон для карточек*/
 const elementTemplate = document.querySelector(".element-template");
 /* контейнер для карточек*/
@@ -32,8 +41,8 @@ profileEditButton.addEventListener('click', () => checkPopUpProfileState(true));
 popUpProfileCloseButton.addEventListener('click', () => checkPopUpProfileState(false));
 popUpPlaceCloseButton.addEventListener('click', () => checkPopUpPlaceState(false));
 popUpImageCloseButton.addEventListener('click', () => checkPopUpImageState(false));
-popUpSaveButton.addEventListener('click', event => savePopUpProfile(event));
-popUpAddButton.addEventListener('click', event => savePopUpPlace(event));
+popUpSave.addEventListener('submit', event => savePopUpProfile(event));
+popUpAdd.addEventListener('submit', event => savePopUpPlace(event));
 
 /* Переключатель для лайков */
 function toggleLikeStatus(event) {
@@ -43,63 +52,53 @@ function toggleLikeStatus(event) {
 function deleteCard(event) {
     event.target.closest('.wrapper-element').remove();
 }
-
+function openPopUp(popup) {
+    popup.classList.add('popup_opened');
+    popup.classList.remove('popup_closed');
+}
+function closePopUp(popup) {
+    popup.classList.add('popup_closed');
+    setTimeout(function () {
+        popup.classList.remove('popup_opened');
+    }, 190);
+}
 /*Функция скрывает или показывает попАп профиль */
 function checkPopUpProfileState(state) {
     if (state) {
-        const popUpName = popUpModalProfile.querySelector(".popup__edit[name='name']");
-        const popUpStatus = popUpModalProfile.querySelector(".popup__edit[name='status']");
 
         popUpName.value = profileName.textContent;
         popUpStatus.value = profileStatus.textContent;
-        popUpModalProfile.classList.add('popup_opened');
-        popUpModalProfile.classList.remove('popup_closed');
+        openPopUp(popUpModalProfile)
     } else {
-        popUpModalProfile.classList.add('popup_closed');
-        setTimeout(function () {
-            popUpModalProfile.classList.remove('popup_opened');
-        }, 190);
+        closePopUp(popUpModalProfile)
     }
 }
 /*Функция скрывает или показывает попАп места */
 function checkPopUpPlaceState(state) {
     if (state) {
-        popUpModalPlace.classList.add('popup_opened');
-        popUpModalPlace.classList.remove('popup_closed');
+        openPopUp(popUpModalPlace)
     } else {
-        popUpModalPlace.classList.add('popup_closed');
-        setTimeout(function () {
-            popUpModalPlace.classList.remove('popup_opened');
-        }, 190);
+        closePopUp(popUpModalPlace)
     }
 }
 /*Функция скрывает или показывает попАп фото */
 function checkPopUpImageState(state, event) {
     if (state) {
 
-        const popUpImage = popUpModalImage.querySelector('.popup__image');
-        const popUpTitle = popUpModalImage.querySelector('.popup__title');
-
         popUpImage.src = event.target.src;
         popUpImage.ariaLabel = event.target.ariaLabel;
         popUpImage.alt = event.target.alt;
-        popUpTitle.textContent = event.target.nextElementSibling.firstElementChild.textContent;
+        popUpTitle.textContent = event.target.closest('.element').querySelector('.element__title').textContent;
 
-        popUpModalImage.classList.add('popup_opened');
-        popUpModalImage.classList.remove('popup_closed');
+        openPopUp(popUpModalImage)
     } else {
-        popUpModalImage.classList.add('popup_closed');
-        setTimeout(function () {
-            popUpModalImage.classList.remove('popup_opened');
-        }, 190);
+        closePopUp(popUpModalImage)
     }
 }
 /* сохранение изменений профиля */
 function savePopUpProfile(event) {
     event.preventDefault();
 
-    const popUpName = popUpModalProfile.querySelector(".popup__edit[name='name']");
-    const popUpStatus = popUpModalProfile.querySelector(".popup__edit[name='status']");
     profileName.textContent = popUpName.value;
     profileStatus.textContent = popUpStatus.value;
     checkPopUpProfileState(false)
@@ -108,12 +107,11 @@ function savePopUpProfile(event) {
 function savePopUpPlace(event) {
     event.preventDefault();
 
-    const popUpPlace = popUpModalPlace.querySelector(".popup__edit[name='place']");
-    const popUpLink = popUpModalPlace.querySelector(".popup__edit[name='link']");
     elementGrid.prepend(createCard(popUpPlace.value, popUpLink.value));
+    event.target.reset()
     checkPopUpPlaceState(false);
-}
 
+}
 /* Создание и возврат карточки */
 function createCard(name, link) {
 
