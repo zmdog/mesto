@@ -48,39 +48,45 @@ popUpAdd.addEventListener('submit', event => savePopUpPlace(event));
 function toggleLikeStatus(event) {
     if (event.target.classList.contains('element__like')) event.target.classList.toggle('element__like_active');
 }
+
 /* Удаление карточек */
 function deleteCard(event) {
     event.target.closest('.wrapper-element').remove();
 }
+
 function openPopUp(popup) {
     popup.classList.add('popup_opened');
     popup.classList.remove('popup_closed');
 }
+
 function closePopUp(popup) {
     popup.classList.add('popup_closed');
     setTimeout(function () {
         popup.classList.remove('popup_opened');
     }, 190);
 }
+
 /*Функция скрывает или показывает попАп профиль */
 function checkPopUpProfileState(state) {
     if (state) {
 
         popUpName.value = profileName.textContent;
         popUpStatus.value = profileStatus.textContent;
-        openPopUp(popUpModalProfile)
+        openPopUp(popUpModalProfile);
     } else {
-        closePopUp(popUpModalProfile)
+        closePopUp(popUpModalProfile);
     }
 }
+
 /*Функция скрывает или показывает попАп места */
 function checkPopUpPlaceState(state) {
     if (state) {
-        openPopUp(popUpModalPlace)
+        openPopUp(popUpModalPlace);
     } else {
-        closePopUp(popUpModalPlace)
+        closePopUp(popUpModalPlace);
     }
 }
+
 /*Функция скрывает или показывает попАп фото */
 function checkPopUpImageState(state, event) {
     if (state) {
@@ -90,28 +96,31 @@ function checkPopUpImageState(state, event) {
         popUpImage.alt = event.target.alt;
         popUpTitle.textContent = event.target.closest('.element').querySelector('.element__title').textContent;
 
-        openPopUp(popUpModalImage)
+        openPopUp(popUpModalImage);
     } else {
-        closePopUp(popUpModalImage)
+        closePopUp(popUpModalImage);
     }
 }
+
 /* сохранение изменений профиля */
 function savePopUpProfile(event) {
     event.preventDefault();
 
     profileName.textContent = popUpName.value;
     profileStatus.textContent = popUpStatus.value;
-    checkPopUpProfileState(false)
+    checkPopUpProfileState(false);
 }
+
 /* сохранение новой карточки  */
 function savePopUpPlace(event) {
     event.preventDefault();
 
     elementGrid.prepend(createCard(popUpPlace.value, popUpLink.value));
-    event.target.reset()
+    event.target.reset();
     checkPopUpPlaceState(false);
 
 }
+
 /* Создание и возврат карточки */
 function createCard(name, link) {
 
