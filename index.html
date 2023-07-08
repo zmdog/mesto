@@ -49,11 +49,23 @@
                     class="button popup__close-button popup__close-button_profile">
             </button>
             <h2 class="popup__purpose">Редактировать профиль</h2>
-            <form name="changeProfile" class="popup__container">
-                <input class="popup__edit" name="name" type="text">
-                <input class="popup__edit" name="status" type="text">
+            <form novalidate name="changeProfile" class="popup__container">
+                <fieldset class="popup__set">
+                    <label class="popup__field">
+                        <input type="text" class="popup__edit" name="name" required minlength="2" maxlength="40">
+                        <span class="popup__input-error popup__input-error_name"></span>
+                    </label>
+                </fieldset>
+                <fieldset class="popup__set">
+                    <label class="popup__field">
+                        <input type="text" class="popup__edit" name="status" type="text" required minlength="2"
+                               maxlength="200">
+                        <span class="popup__input-error popup__input-error_status"></span>
+                    </label>
+                </fieldset>
                 <button aria-label="Сохранить изменения" type="submit"
-                        class="button popup__submit-button popup__submit-button_profile">Сохранить
+                        class="button popup__submit-button popup__submit-button_active popup__submit-button_profile">
+                    Сохранить
                 </button>
             </form>
         </div>
@@ -67,11 +79,24 @@
                     class="button popup__close-button popup__close-button_place">
             </button>
             <h2 class="popup__purpose">Новое место</h2>
-            <form name="changeProfile" class="popup__container">
-                <input class="popup__edit" name="place" placeholder="Название" type="text">
-                <input class="popup__edit" name="link" placeholder="Ссылка на картинку" type="text">
+            <form novalidate name="changeProfile" class="popup__container">
+                <fieldset class="popup__set">
+                    <label class="popup__field">
+                        <input type="text" class="popup__edit" name="place" placeholder="Название" type="text" required
+                               minlength="2" maxlength="30">
+                        <span class="popup__input-error popup__input-error_place"></span>
+                    </label>
+                </fieldset>
+                <fieldset class="popup__set">
+                    <label class="popup__field">
+                        <input type="url" class="popup__edit" name="link" placeholder="Ссылка на картинку" type="text"
+                               required>
+                        <span class="popup__input-error popup__input-error_link"></span>
+                    </label>
+                </fieldset>
                 <button aria-label="Сохранить изменения" type="submit"
-                        class="button popup__submit-button popup__submit-button_place">Создать
+                        class="button popup__submit-button popup__submit-button_inactive popup__submit-button_place">
+                    Создать
                 </button>
             </form>
         </div>
@@ -104,5 +129,6 @@
     </li>
 </template>
 <script defer type="module" src="scripts/index.js"></script>
+<script defer type="module" src="scripts/validate.js"></script>
 </body>
 </html>

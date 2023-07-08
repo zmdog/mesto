@@ -2,7 +2,9 @@
     position: absolute;
     width: calc(430/1280 * 100%);
     max-width: 430px;
+    display: flex;
     flex-direction: column;
+    gap: 42px;
     z-index: 1;
     background-color: #FFF;
     padding: 34px 36px 37px 36px;

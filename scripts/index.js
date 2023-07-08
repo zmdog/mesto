@@ -1,4 +1,5 @@
 import {initialCards} from './initial-cards.js'
+import {checkFormError} from './validate.js'
 
 /* попапы*/
 const popUpModalProfile = document.querySelector(".popup_profile");
@@ -13,13 +14,12 @@ const popUpLink = popUpModalPlace.querySelector(".popup__edit[name='link']");
 /* контейнеры попапа фото */
 const popUpImage = popUpModalImage.querySelector('.popup__image');
 const popUpTitle = popUpModalImage.querySelector('.popup__title');
-/* кнопки закрытия*/
-const popUpProfileCloseButton = popUpModalProfile.querySelector('.popup__close-button_profile');
-const popUpPlaceCloseButton = popUpModalPlace.querySelector('.popup__close-button_place');
-const popUpImageCloseButton = popUpModalImage.querySelector('.popup__close-button_image');
-/* кнопки подтверждения*/
+/* формы попапов*/
 const popUpSave = popUpModalProfile.querySelector('.popup__container');
 const popUpAdd = popUpModalPlace.querySelector('.popup__container');
+/* кнопки форм*/
+const popUpSaveButton = popUpSave.querySelector('.popup__submit-button');
+const popUpAddButton = popUpAdd.querySelector('.popup__submit-button');
 /* шаблон для карточек*/
 const elementTemplate = document.querySelector(".element-template");
 /* контейнер для карточек*/
@@ -30,19 +30,38 @@ const profileStatus = document.querySelector(".profile__status");
 const profileAddButton = document.querySelector('.profile__add-button');
 const profileEditButton = document.querySelector('.profile__edit-button');
 
-/* Отрисовка всех имеющихся карточек из массива initialCards */
-initialCards.forEach(elem => {
-    elementGrid.prepend(createCard(elem.name, elem.link));
-})
+    /* Отрисовка всех имеющихся карточек из массива initialCards */
+    initialCards.forEach(elem => {
+        elementGrid.prepend(createCard(elem.name, elem.link));
+    })
 
 elementGrid.addEventListener('click', event => toggleLikeStatus(event));
 profileAddButton.addEventListener('click', () => checkPopUpPlaceState(true));
 profileEditButton.addEventListener('click', () => checkPopUpProfileState(true));
-popUpProfileCloseButton.addEventListener('click', () => checkPopUpProfileState(false));
-popUpPlaceCloseButton.addEventListener('click', () => checkPopUpPlaceState(false));
-popUpImageCloseButton.addEventListener('click', () => checkPopUpImageState(false));
 popUpSave.addEventListener('submit', event => savePopUpProfile(event));
 popUpAdd.addEventListener('submit', event => savePopUpPlace(event));
+popUpName.addEventListener('input', event => checkFormError([popUpName, popUpStatus], popUpSaveButton, event.target))
+popUpStatus.addEventListener('input', event => checkFormError([popUpName, popUpStatus], popUpSaveButton, event.target))
+popUpPlace.addEventListener('input', event => checkFormError([popUpPlace, popUpLink], popUpAddButton, event.target))
+popUpLink.addEventListener('input', event => checkFormError([popUpPlace, popUpLink], popUpAddButton, event.target))
+popUpModalProfile.addEventListener('click', event => {
+    if (closePopUpOptions(event)) checkPopUpProfileState(false)
+})
+document.addEventListener('keydown', event => {
+    if (closePopUpOptions(event)) checkPopUpProfileState(false)
+})
+popUpModalPlace.addEventListener('click', event => {
+    if (closePopUpOptions(event)) checkPopUpPlaceState(false)
+})
+document.addEventListener('keydown', event => {
+    if (closePopUpOptions(event)) checkPopUpPlaceState(false)
+})
+popUpModalImage.addEventListener('click', event => {
+    if (closePopUpOptions(event)) checkPopUpImageState(false)
+})
+document.addEventListener('keydown', event => {
+    if (closePopUpOptions(event)) checkPopUpImageState(false)
+})
 
 /* Переключатель для лайков */
 function toggleLikeStatus(event) {
@@ -106,14 +125,17 @@ function checkPopUpImageState(state, event) {
 function savePopUpProfile(event) {
     event.preventDefault();
 
-    profileName.textContent = popUpName.value;
-    profileStatus.textContent = popUpStatus.value;
-    checkPopUpProfileState(false);
+    if (popUpSaveButton.classList.contains('popup__submit-button_active')) {
+        profileName.textContent = popUpName.value;
+        profileStatus.textContent = popUpStatus.value;
+        checkPopUpProfileState(false);
+    }
 }
 
 /* сохранение новой карточки  */
 function savePopUpPlace(event) {
     event.preventDefault();
+
 
     elementGrid.prepend(createCard(popUpPlace.value, popUpLink.value));
     event.target.reset();
@@ -141,3 +163,8 @@ function createCard(name, link) {
     return element
 }
 
+function closePopUpOptions(event) {
+    return event.target.classList.contains('popup__close-button') ||
+        (!event.target.classList.contains('popup__wrapper') && event.target.classList.contains('popup_opened')) ||
+        event.keyCode === 27
+}
