@@ -48,9 +48,9 @@
 @import "../blocks/popup/__edit/popup__edit.css";
 @import "../blocks/popup/__purpose/popup__purpose.css";
 @import "../blocks/popup/__submit-button/popup__submit-button.css";
-@import "../blocks/popup/__close-button/popup__close-button.css";
 @import "../blocks/popup/__submit-button/_active/popup__submit-button_active.css";
 @import "../blocks/popup/__submit-button/_inactive/popup__submit-button_inactive.css";
+@import "../blocks/popup/__close-button/popup__close-button.css";
 @import "../blocks/popup/_opened/popup_opened.css";
 @import "../blocks/popup/_closed/popup_closed.css";
 @import "../blocks/popup/_image/popup_image.css";

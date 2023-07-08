@@ -1,5 +1,5 @@
 import {initialCards} from './initial-cards.js'
-import {checkFormError} from './validate.js'
+import {enableValidation} from './validate.js'
 
 /* попапы*/
 const popUpModalProfile = document.querySelector(".popup_profile");
@@ -35,31 +35,15 @@ const profileEditButton = document.querySelector('.profile__edit-button');
         elementGrid.prepend(createCard(elem.name, elem.link));
     })
 
-elementGrid.addEventListener('click', event => toggleLikeStatus(event));
 profileAddButton.addEventListener('click', () => checkPopUpPlaceState(true));
 profileEditButton.addEventListener('click', () => checkPopUpProfileState(true));
-popUpSave.addEventListener('submit', event => savePopUpProfile(event));
-popUpAdd.addEventListener('submit', event => savePopUpPlace(event));
-popUpName.addEventListener('input', event => checkFormError([popUpName, popUpStatus], popUpSaveButton, event.target))
-popUpStatus.addEventListener('input', event => checkFormError([popUpName, popUpStatus], popUpSaveButton, event.target))
-popUpPlace.addEventListener('input', event => checkFormError([popUpPlace, popUpLink], popUpAddButton, event.target))
-popUpLink.addEventListener('input', event => checkFormError([popUpPlace, popUpLink], popUpAddButton, event.target))
 popUpModalProfile.addEventListener('click', event => {
-    if (closePopUpOptions(event)) checkPopUpProfileState(false)
-})
-document.addEventListener('keydown', event => {
     if (closePopUpOptions(event)) checkPopUpProfileState(false)
 })
 popUpModalPlace.addEventListener('click', event => {
     if (closePopUpOptions(event)) checkPopUpPlaceState(false)
 })
-document.addEventListener('keydown', event => {
-    if (closePopUpOptions(event)) checkPopUpPlaceState(false)
-})
 popUpModalImage.addEventListener('click', event => {
-    if (closePopUpOptions(event)) checkPopUpImageState(false)
-})
-document.addEventListener('keydown', event => {
     if (closePopUpOptions(event)) checkPopUpImageState(false)
 })
 
@@ -73,12 +57,32 @@ function deleteCard(event) {
     event.target.closest('.wrapper-element').remove();
 }
 
+function addEventListenerEsc() {
+    document.addEventListener('keydown', event => {
+        if (closePopUpOptions(event)) checkPopUpProfileState(false)
+    })
+    document.addEventListener('keydown', event => {
+        if (closePopUpOptions(event)) checkPopUpPlaceState(false)
+    })
+    document.addEventListener('keydown', event => {
+        if (closePopUpOptions(event)) checkPopUpImageState(false)
+    })
+}
+
+function removeEventListenerEsc() {
+    document.removeEventListener('keydown', checkPopUpProfileState)
+    document.removeEventListener('keydown', checkPopUpPlaceState)
+    document.removeEventListener('keydown', checkPopUpImageState)
+}
+
 function openPopUp(popup) {
+    addEventListenerEsc()
     popup.classList.add('popup_opened');
     popup.classList.remove('popup_closed');
 }
 
 function closePopUp(popup) {
+    removeEventListenerEsc()
     popup.classList.add('popup_closed');
     setTimeout(function () {
         popup.classList.remove('popup_opened');
@@ -136,11 +140,13 @@ function savePopUpProfile(event) {
 function savePopUpPlace(event) {
     event.preventDefault();
 
-
-    elementGrid.prepend(createCard(popUpPlace.value, popUpLink.value));
-    event.target.reset();
-    checkPopUpPlaceState(false);
-
+    if(popUpAddButton.classList.contains('popup__submit-button_active')){
+        elementGrid.prepend(createCard(popUpPlace.value, popUpLink.value));
+        event.target.reset();
+        popUpAddButton.classList.remove('popup__submit-button_active')
+        popUpAddButton.classList.add('popup__submit-button_inactive')
+        checkPopUpPlaceState(false);
+    }
 }
 
 /* Создание и возврат карточки */
@@ -159,6 +165,7 @@ function createCard(name, link) {
     elementBtn.ariaLabel = 'Поставить лайк фото ' + name;
     elementDelete.addEventListener('click', event => deleteCard(event));
     photo.addEventListener('click', event => checkPopUpImageState(true, event));
+    elementBtn.addEventListener('click', event => toggleLikeStatus(event));
 
     return element
 }
@@ -168,3 +175,13 @@ function closePopUpOptions(event) {
         (!event.target.classList.contains('popup__wrapper') && event.target.classList.contains('popup_opened')) ||
         event.keyCode === 27
 }
+
+enableValidation({
+    formSelector: '.popup__container',
+    savePopUpProfile: savePopUpProfile,
+    savePopUpPlace: savePopUpPlace,
+    inputSelector: '.popup__edit',
+    submitButtonSelector: 'popup__submit-button',
+    inputErrorClass: 'popup__input-error',
+    errorClass: 'popup__error_visible'
+})
