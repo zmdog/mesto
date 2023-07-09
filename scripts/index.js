@@ -1,5 +1,5 @@
 import {initialCards} from './initial-cards.js'
-import {enableValidation} from './validate.js'
+import {enableValidation, toggleButtonInactivity} from './validate.js'
 
 /* попапы*/
 const popUpModalProfile = document.querySelector(".popup_profile");
@@ -30,11 +30,14 @@ const profileStatus = document.querySelector(".profile__status");
 const profileAddButton = document.querySelector('.profile__add-button');
 const profileEditButton = document.querySelector('.profile__edit-button');
 
-    /* Отрисовка всех имеющихся карточек из массива initialCards */
-    initialCards.forEach(elem => {
+/* Отрисовка всех имеющихся карточек из массива initialCards */
+initialCards.forEach(elem => {
         elementGrid.prepend(createCard(elem.name, elem.link));
     })
 
+/* Добавление слушателей */
+popUpSave.addEventListener('submit', savePopUpProfile);
+popUpAdd.addEventListener('submit', event => savePopUpPlace(event));
 profileAddButton.addEventListener('click', () => checkPopUpPlaceState(true));
 profileEditButton.addEventListener('click', () => checkPopUpProfileState(true));
 popUpModalProfile.addEventListener('click', event => {
@@ -56,34 +59,30 @@ function toggleLikeStatus(event) {
 function deleteCard(event) {
     event.target.closest('.wrapper-element').remove();
 }
-
+/* Создание события пон нажатию на esc */
 function addEventListenerEsc() {
-    document.addEventListener('keydown', event => {
-        if (closePopUpOptions(event)) checkPopUpProfileState(false)
-    })
-    document.addEventListener('keydown', event => {
-        if (closePopUpOptions(event)) checkPopUpPlaceState(false)
-    })
-    document.addEventListener('keydown', event => {
-        if (closePopUpOptions(event)) checkPopUpImageState(false)
-    })
+    document.addEventListener('keydown', closeEscPopUp)
 }
-
+/* Удаление события пон нажатию на esc */
 function removeEventListenerEsc() {
-    document.removeEventListener('keydown', checkPopUpProfileState)
-    document.removeEventListener('keydown', checkPopUpPlaceState)
-    document.removeEventListener('keydown', checkPopUpImageState)
+    document.removeEventListener('keydown', closeEscPopUp)
 }
-
+/* Закрытие попапа при нажатии на esc */
+function closeEscPopUp(e) {
+    const popUp = document.querySelector('.popup_opened')
+    if (closePopUpOptions(e)) closePopUp(popUp)
+}
+/* Открытие попапа */
 function openPopUp(popup) {
     addEventListenerEsc()
     popup.classList.add('popup_opened');
     popup.classList.remove('popup_closed');
 }
-
+/* Закрытие попапа */
 function closePopUp(popup) {
     removeEventListenerEsc()
     popup.classList.add('popup_closed');
+    popup.classList.remove('popup_opened');
     setTimeout(function () {
         popup.classList.remove('popup_opened');
     }, 190);
@@ -126,8 +125,7 @@ function checkPopUpImageState(state, event) {
 }
 
 /* сохранение изменений профиля */
-function savePopUpProfile(event) {
-    event.preventDefault();
+function savePopUpProfile() {
 
     if (popUpSaveButton.classList.contains('popup__submit-button_active')) {
         profileName.textContent = popUpName.value;
@@ -138,13 +136,11 @@ function savePopUpProfile(event) {
 
 /* сохранение новой карточки  */
 function savePopUpPlace(event) {
-    event.preventDefault();
 
     if(popUpAddButton.classList.contains('popup__submit-button_active')){
         elementGrid.prepend(createCard(popUpPlace.value, popUpLink.value));
         event.target.reset();
-        popUpAddButton.classList.remove('popup__submit-button_active')
-        popUpAddButton.classList.add('popup__submit-button_inactive')
+        toggleButtonInactivity(popUpAddButton, 'popup__submit-button')
         checkPopUpPlaceState(false);
     }
 }
@@ -169,17 +165,15 @@ function createCard(name, link) {
 
     return element
 }
-
-function closePopUpOptions(event) {
-    return event.target.classList.contains('popup__close-button') ||
-        (!event.target.classList.contains('popup__wrapper') && event.target.classList.contains('popup_opened')) ||
-        event.keyCode === 27
+/* Условия для закрытия попапа */
+function closePopUpOptions(e) {
+    return e.target.classList.contains('popup__close-button') ||
+        (!e.target.classList.contains('popup__wrapper') && e.target.classList.contains('popup_opened')) ||
+        e.keyCode === 27
 }
-
+/* Валидация попапа */
 enableValidation({
     formSelector: '.popup__container',
-    savePopUpProfile: savePopUpProfile,
-    savePopUpPlace: savePopUpPlace,
     inputSelector: '.popup__edit',
     submitButtonSelector: 'popup__submit-button',
     inputErrorClass: 'popup__input-error',
