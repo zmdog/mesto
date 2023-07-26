@@ -1,5 +1,6 @@
 import {initialCards} from './initial-cards.js'
-import {enableValidation, toggleButtonInactivity} from './validate.js'
+import FormValidator from "./FormValidator.mjs";
+import Card from './Card.mjs'
 
 /* попапы*/
 const popUpModalProfile = document.querySelector(".popup_profile");
@@ -29,10 +30,21 @@ const profileName = document.querySelector(".profile__name");
 const profileStatus = document.querySelector(".profile__status");
 const profileAddButton = document.querySelector('.profile__add-button');
 const profileEditButton = document.querySelector('.profile__edit-button');
+/* Общие параметры для валидации */
+const validatyParams = {
+    inputSelector: '.popup__edit',
+    submitButtonSelector: 'popup__submit-button',
+    inputErrorClass: 'popup__input-error',
+    errorClass: 'popup__error_visible'
+}
+/* Общее перезаписываемое хранилище объектов*/
+let validaty;
+
 
 /* Отрисовка всех имеющихся карточек из массива initialCards */
 initialCards.forEach(elem => {
-        elementGrid.prepend(createCard(elem.name, elem.link));
+    const card = new Card({name: elem.name, link: elem.link}, elementTemplate)
+    elementGrid.prepend(card.renderCard());
     })
 
 /* Добавление слушателей */
@@ -49,16 +61,6 @@ popUpModalPlace.addEventListener('click', event => {
 popUpModalImage.addEventListener('click', event => {
     if (closePopUpOptions(event)) checkPopUpImageState(false)
 })
-
-/* Переключатель для лайков */
-function toggleLikeStatus(event) {
-    if (event.target.classList.contains('element__like')) event.target.classList.toggle('element__like_active');
-}
-
-/* Удаление карточек */
-function deleteCard(event) {
-    event.target.closest('.wrapper-element').remove();
-}
 /* Создание события пон нажатию на esc */
 function addEventListenerEsc() {
     document.addEventListener('keydown', closeEscPopUp)
@@ -73,13 +75,13 @@ function closeEscPopUp(e) {
     if (closePopUpOptions(e)) closePopUp(popUp)
 }
 /* Открытие попапа */
-function openPopUp(popup) {
+export function openPopUp(popup) {
     addEventListenerEsc()
     popup.classList.add('popup_opened');
     popup.classList.remove('popup_closed');
 }
 /* Закрытие попапа */
-function closePopUp(popup) {
+export function closePopUp(popup) {
     removeEventListenerEsc()
     popup.classList.add('popup_closed');
     popup.classList.remove('popup_opened');
@@ -91,7 +93,8 @@ function closePopUp(popup) {
 /*Функция скрывает или показывает попАп профиль */
 function checkPopUpProfileState(state) {
     if (state) {
-
+        validaty = new FormValidator(validatyParams, popUpSave)
+        validaty.enableValidation()
         popUpName.value = profileName.textContent;
         popUpStatus.value = profileStatus.textContent;
         openPopUp(popUpModalProfile);
@@ -103,6 +106,8 @@ function checkPopUpProfileState(state) {
 /*Функция скрывает или показывает попАп места */
 function checkPopUpPlaceState(state) {
     if (state) {
+        validaty = new FormValidator(validatyParams, popUpAdd)
+        validaty.enableValidation()
         openPopUp(popUpModalPlace);
     } else {
         closePopUp(popUpModalPlace);
@@ -110,7 +115,7 @@ function checkPopUpPlaceState(state) {
 }
 
 /*Функция скрывает или показывает попАп фото */
-function checkPopUpImageState(state, event) {
+export function checkPopUpImageState(state, event) {
     if (state) {
 
         popUpImage.src = event.target.src;
@@ -138,32 +143,12 @@ function savePopUpProfile() {
 function savePopUpPlace(event) {
 
     if(popUpAddButton.classList.contains('popup__submit-button_active')){
-        elementGrid.prepend(createCard(popUpPlace.value, popUpLink.value));
+        const card = new Card({name: popUpPlace.value, link: popUpLink.value}, elementTemplate)
+        elementGrid.prepend(card.renderCard());
         event.target.reset();
-        toggleButtonInactivity(popUpAddButton, 'popup__submit-button')
+        validaty.toggleButtonInactivity(popUpAddButton, 'popup__submit-button')
         checkPopUpPlaceState(false);
     }
-}
-
-/* Создание и возврат карточки */
-function createCard(name, link) {
-
-    const element = elementTemplate.content.cloneNode(true);
-    const photo = element.querySelector('.element__photo');
-    const elementTitle = element.querySelector('.element__title');
-    const elementBtn = element.querySelector('.element__like');
-    const elementDelete = element.querySelector('.element__delete');
-
-    photo.src = link;
-    photo.alt = 'Фото ' + name;
-    photo.ariaLabel = 'Фото ' + name;
-    elementTitle.textContent = name;
-    elementBtn.ariaLabel = 'Поставить лайк фото ' + name;
-    elementDelete.addEventListener('click', event => deleteCard(event));
-    photo.addEventListener('click', event => checkPopUpImageState(true, event));
-    elementBtn.addEventListener('click', event => toggleLikeStatus(event));
-
-    return element
 }
 /* Условия для закрытия попапа */
 function closePopUpOptions(e) {
@@ -171,11 +156,3 @@ function closePopUpOptions(e) {
         (!e.target.classList.contains('popup__wrapper') && e.target.classList.contains('popup_opened')) ||
         e.keyCode === 27
 }
-/* Валидация попапа */
-enableValidation({
-    formSelector: '.popup__container',
-    inputSelector: '.popup__edit',
-    submitButtonSelector: 'popup__submit-button',
-    inputErrorClass: 'popup__input-error',
-    errorClass: 'popup__error_visible'
-})
