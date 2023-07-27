@@ -1,29 +1,45 @@
-
 export default class FormValidator {
     constructor(data, formSelector) {
         this._formSelector = formSelector;
+        this._form = this._getFormSelector();
         this._inputSelector = data.inputSelector;
         this._submitButtonSelector = data.submitButtonSelector;
         this._inputErrorClass = data.inputErrorClass;
         this._errorClass = data.errorClass;
+        this.submitActiveButtonSelector = data.submitActiveButtonSelector;
+        this.submitInactiveButtonSelector = data.submitInactiveButtonSelector;
     }
 
     enableValidation() {
-
-        this._formSelector.addEventListener('submit', evt => evt.preventDefault());
         this._setEventListeners();
     }
+
+    checkValidation() {
+        this._inputList.forEach((inputElement) => {
+            this._checkValidaty(inputElement);
+        })
+    }
+
     /* Создание слушателей при вводе в инпуты */
     _setEventListeners() {
-        const inputList = Array.from(this._formSelector.querySelectorAll(this._inputSelector));
-        const buttonElement = this._formSelector.querySelector(`.${this._submitButtonSelector}`);
+        this._inputList = Array.from(this._form.querySelectorAll(this._inputSelector));
+        this._buttonElement = this._form.querySelector(`.${this._submitButtonSelector}`);
 
-        inputList.forEach((inputElement) => {
+        this._form.addEventListener('submit', evt => evt.preventDefault());
+        this._inputList.forEach((inputElement) => {
             inputElement.addEventListener('input', () => {
-                this._checkInputValidity(inputElement);
-                this._toggleButtonState(inputList, buttonElement)
+                this._checkValidaty(inputElement)
             })
         })
+    }
+
+    _checkValidaty(inputElement) {
+        this._checkInputValidity(inputElement);
+        this.toggleButtonState()
+    }
+
+    _getFormSelector() {
+        return document.querySelector(this._formSelector)
     }
 
     /* Проверка валидации инпута */
@@ -34,40 +50,48 @@ export default class FormValidator {
             this._hideInputError(inputElement);
         }
     }
+
     /* Показ ошибки инпута */
     _showInputError(inputElement, errorMessage) {
-        const errorElement = this._formSelector.querySelector(`.${inputElement.id}-error`);
+        const errorElement = this._form.querySelector(`.${inputElement.id}-error`);
         inputElement.classList.add(this._inputErrorClass);
         errorElement.textContent = errorMessage;
         errorElement.classList.add(this._errorClass);
     }
+
     /* Скрытие ошибки инпута */
     _hideInputError(inputElement) {
-        const errorElement = this._formSelector.querySelector(`.${inputElement.id}-error`);
+        const errorElement = this._form.querySelector(`.${inputElement.id}-error`);
         inputElement.classList.remove(this._inputErrorClass);
         errorElement.classList.remove(this._errorClass);
         errorElement.textContent = '';
     }
+
     /* Деактивация/активация кнопки подтверждения при условии*/
-    _toggleButtonState(inputList, buttonElement) {
-        if (this._hasInvalidInput(inputList)) {
-            this._toggleButtonActivity(buttonElement)
-        }else{
-            this.toggleButtonInactivity(buttonElement)
+    toggleButtonState() {
+        if (this._hasInvalidInput()) {
+            this._toggleButtonActivity()
+        } else {
+            this._toggleButtonInactivity()
         }
     }
+
     /* Активация кнопки подтверждения */
-    _toggleButtonActivity(buttonElement) {
-        buttonElement.classList.remove(`${this._submitButtonSelector}_inactive`)
-        buttonElement.classList.add(`${this._submitButtonSelector}_active`)
+    _toggleButtonActivity() {
+        this._buttonElement.disabled = false
+        this._buttonElement.classList.remove(this.submitInactiveButtonSelector)
+        this._buttonElement.classList.add(this.submitActiveButtonSelector)
     }
+
     /* Деактивация кнопки подтверждения */
-    toggleButtonInactivity(buttonElement) {
-        buttonElement.classList.add(`${this._submitButtonSelector}_inactive`)
-        buttonElement.classList.remove(`${this._submitButtonSelector}_active`)
+    _toggleButtonInactivity() {
+        this._buttonElement.disabled = true
+        this._buttonElement.classList.add(this.submitInactiveButtonSelector)
+        this._buttonElement.classList.remove(this.submitActiveButtonSelector)
     }
+
     /* Проверка всех инпутов для кнопки подтверждения */
-    _hasInvalidInput(inputList) {
-        return inputList.every((input) => input.validity.valid)
+    _hasInvalidInput() {
+        return this._inputList.every((input) => input.validity.valid)
     }
 }

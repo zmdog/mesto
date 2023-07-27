@@ -1,4 +1,4 @@
-import {checkPopUpImageState} from "./index.js";
+import {setPopUpImageState} from "./index.js";
 
 export default class Card {
     constructor(data, elementTemplate){
@@ -8,12 +8,14 @@ export default class Card {
     }
 
     _getTemplate() {
-        return this._templateSelector
+        return document.querySelector(this._templateSelector)
             .content
             .querySelector('.wrapper-element')
             .cloneNode(true);
     }
     _createCard() {
+        const altText = 'Фото ' + this._name;
+
         this._element = this._getTemplate();
         this._photo = this._element.querySelector('.element__photo');
         this._elementTitle = this._element.querySelector('.element__title');
@@ -22,8 +24,8 @@ export default class Card {
         this._setEvents();
 
         this._photo.src = this._link;
-        this._photo.alt = 'Фото ' + this._name;
-        this._photo.ariaLabel = 'Фото ' + this._name;
+        this._photo.alt = altText;
+        this._photo.ariaLabel = altText;
         this._elementTitle.textContent = this._name;
         this._elementBtn.ariaLabel = 'Поставить лайк фото ' + this._name;
     }
@@ -32,15 +34,15 @@ export default class Card {
         this._createCard()
         return this._element
     }
-    _toggleLikeStatus(event) {
-        if (event.target.classList.contains('element__like')) event.target.classList.toggle('element__like_active');
+    _toggleLikeStatus() {
+        this._elementBtn.classList.toggle('element__like_active');
     }
-    _deleteCard(event) {
-        event.target.closest('.wrapper-element').remove();
+    _deleteCard() {
+        this._element.remove();
     }
     _setEvents() {
-        this._elementDelete.addEventListener('click', event => this._deleteCard(event));
-        this._elementBtn.addEventListener('click', event => this._toggleLikeStatus(event));
-        this._photo.addEventListener('click', event => checkPopUpImageState(true, event));
+        this._elementDelete.addEventListener('click', () => this._deleteCard());
+        this._elementBtn.addEventListener('click', () => this._toggleLikeStatus());
+        this._photo.addEventListener('click', event => setPopUpImageState(event));
     }
 }

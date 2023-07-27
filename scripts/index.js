@@ -1,158 +1,120 @@
-import {initialCards} from './initial-cards.js'
+import * as constants from './constants.js'
 import FormValidator from "./FormValidator.mjs";
 import Card from './Card.mjs'
 
-/* попапы*/
-const popUpModalProfile = document.querySelector(".popup_profile");
-const popUpModalPlace = document.querySelector(".popup_place");
-const popUpModalImage = document.querySelector(".popup_image");
-/* инпуты попапа профиля */
-const popUpName = popUpModalProfile.querySelector(".popup__edit[name='name']");
-const popUpStatus = popUpModalProfile.querySelector(".popup__edit[name='status']");
-/* инпуты попапа место */
-const popUpPlace = popUpModalPlace.querySelector(".popup__edit[name='place']");
-const popUpLink = popUpModalPlace.querySelector(".popup__edit[name='link']");
-/* контейнеры попапа фото */
-const popUpImage = popUpModalImage.querySelector('.popup__image');
-const popUpTitle = popUpModalImage.querySelector('.popup__title');
-/* формы попапов*/
-const popUpSave = popUpModalProfile.querySelector('.popup__container');
-const popUpAdd = popUpModalPlace.querySelector('.popup__container');
-/* кнопки форм*/
-const popUpSaveButton = popUpSave.querySelector('.popup__submit-button');
-const popUpAddButton = popUpAdd.querySelector('.popup__submit-button');
-/* шаблон для карточек*/
-const elementTemplate = document.querySelector(".element-template");
-/* контейнер для карточек*/
-const elementGrid = document.querySelector(".elements__elements-grid");
-/* Элементы шапки профиля */
-const profileName = document.querySelector(".profile__name");
-const profileStatus = document.querySelector(".profile__status");
-const profileAddButton = document.querySelector('.profile__add-button');
-const profileEditButton = document.querySelector('.profile__edit-button');
-/* Общие параметры для валидации */
-const validatyParams = {
-    inputSelector: '.popup__edit',
-    submitButtonSelector: 'popup__submit-button',
-    inputErrorClass: 'popup__input-error',
-    errorClass: 'popup__error_visible'
-}
-/* Общее перезаписываемое хранилище объектов*/
-let validaty;
+/* валидаторы*/
+const validatyProfile = new FormValidator(constants.validatyParams, '.popup__container_profile');
+const validatyPlace = new FormValidator(constants.validatyParams, '.popup__container_place')
 
 
 /* Отрисовка всех имеющихся карточек из массива initialCards */
-initialCards.forEach(elem => {
-    const card = new Card({name: elem.name, link: elem.link}, elementTemplate)
-    elementGrid.prepend(card.renderCard());
-    })
+constants.cards.forEach(elem => createCard({name: elem.name, link: elem.link}, ".element-template"))
 
 /* Добавление слушателей */
-popUpSave.addEventListener('submit', savePopUpProfile);
-popUpAdd.addEventListener('submit', event => savePopUpPlace(event));
-profileAddButton.addEventListener('click', () => checkPopUpPlaceState(true));
-profileEditButton.addEventListener('click', () => checkPopUpProfileState(true));
-popUpModalProfile.addEventListener('click', event => {
-    if (closePopUpOptions(event)) checkPopUpProfileState(false)
+constants.popUpSave.addEventListener('submit', savePopUpProfile);
+constants.popUpAdd.addEventListener('submit', event => savePopUpPlace(event));
+constants.profileAddButton.addEventListener('click', () => setPopUpPlaceState());
+constants.profileEditButton.addEventListener('click', () => setPopUpProfileState());
+constants.popUpModalProfile.addEventListener('click', event => {
+    if (isClosePopUpOptions(event)) closePopUp(constants.popUpModalProfile)
 })
-popUpModalPlace.addEventListener('click', event => {
-    if (closePopUpOptions(event)) checkPopUpPlaceState(false)
+constants.popUpModalPlace.addEventListener('click', event => {
+    if (isClosePopUpOptions(event)) closePopUp(constants.popUpModalPlace)
 })
-popUpModalImage.addEventListener('click', event => {
-    if (closePopUpOptions(event)) checkPopUpImageState(false)
+constants.popUpModalImage.addEventListener('click', event => {
+    if (isClosePopUpOptions(event)) closePopUp(constants.popUpModalImage)
 })
+
 /* Создание события пон нажатию на esc */
 function addEventListenerEsc() {
     document.addEventListener('keydown', closeEscPopUp)
 }
+
 /* Удаление события пон нажатию на esc */
 function removeEventListenerEsc() {
     document.removeEventListener('keydown', closeEscPopUp)
 }
+
 /* Закрытие попапа при нажатии на esc */
 function closeEscPopUp(e) {
+    if (!isClosePopUpOptions(e)) return
     const popUp = document.querySelector('.popup_opened')
-    if (closePopUpOptions(e)) closePopUp(popUp)
+    closePopUp(popUp)
 }
+
 /* Открытие попапа */
 export function openPopUp(popup) {
     addEventListenerEsc()
     popup.classList.add('popup_opened');
     popup.classList.remove('popup_closed');
 }
+
 /* Закрытие попапа */
 export function closePopUp(popup) {
     removeEventListenerEsc()
     popup.classList.add('popup_closed');
-    popup.classList.remove('popup_opened');
     setTimeout(function () {
         popup.classList.remove('popup_opened');
     }, 190);
 }
 
 /*Функция скрывает или показывает попАп профиль */
-function checkPopUpProfileState(state) {
-    if (state) {
-        validaty = new FormValidator(validatyParams, popUpSave)
-        validaty.enableValidation()
-        popUpName.value = profileName.textContent;
-        popUpStatus.value = profileStatus.textContent;
-        openPopUp(popUpModalProfile);
-    } else {
-        closePopUp(popUpModalProfile);
-    }
+function setPopUpProfileState() {
+    constants.popUpName.value = constants.profileName.textContent;
+    constants.popUpStatus.value = constants.profileStatus.textContent;
+    openPopUp(constants.popUpModalProfile);
+    validatyProfile.checkValidation()
 }
 
 /*Функция скрывает или показывает попАп места */
-function checkPopUpPlaceState(state) {
-    if (state) {
-        validaty = new FormValidator(validatyParams, popUpAdd)
-        validaty.enableValidation()
-        openPopUp(popUpModalPlace);
-    } else {
-        closePopUp(popUpModalPlace);
-    }
+function setPopUpPlaceState() {
+    openPopUp(constants.popUpModalPlace);
+    validatyPlace.checkValidation()
 }
 
 /*Функция скрывает или показывает попАп фото */
-export function checkPopUpImageState(state, event) {
-    if (state) {
+export function setPopUpImageState(event) {
+    constants.popUpImage.src = event.target.src;
+    constants.popUpImage.ariaLabel = event.target.ariaLabel;
+    constants.popUpImage.alt = event.target.alt;
+    constants.popUpTitle.textContent = event.target.closest('.element').querySelector('.element__title').textContent;
 
-        popUpImage.src = event.target.src;
-        popUpImage.ariaLabel = event.target.ariaLabel;
-        popUpImage.alt = event.target.alt;
-        popUpTitle.textContent = event.target.closest('.element').querySelector('.element__title').textContent;
-
-        openPopUp(popUpModalImage);
-    } else {
-        closePopUp(popUpModalImage);
-    }
+    openPopUp(constants.popUpModalImage);
 }
 
 /* сохранение изменений профиля */
 function savePopUpProfile() {
 
-    if (popUpSaveButton.classList.contains('popup__submit-button_active')) {
-        profileName.textContent = popUpName.value;
-        profileStatus.textContent = popUpStatus.value;
-        checkPopUpProfileState(false);
-    }
+    constants.profileName.textContent = constants.popUpName.value;
+    constants.profileStatus.textContent = constants.popUpStatus.value;
+    closePopUp(constants.popUpModalProfile);
+}
+
+/* Активация валидаторов */
+function activateValidations() {
+    validatyProfile.enableValidation()
+    validatyPlace.enableValidation()
 }
 
 /* сохранение новой карточки  */
 function savePopUpPlace(event) {
 
-    if(popUpAddButton.classList.contains('popup__submit-button_active')){
-        const card = new Card({name: popUpPlace.value, link: popUpLink.value}, elementTemplate)
-        elementGrid.prepend(card.renderCard());
-        event.target.reset();
-        validaty.toggleButtonInactivity(popUpAddButton, 'popup__submit-button')
-        checkPopUpPlaceState(false);
-    }
+    createCard({name: constants.popUpPlace.value, link: constants.popUpLink.value}, ".element-template")
+    event.target.reset();
+    closePopUp(constants.popUpModalPlace);
 }
+
+/* Создание карточки */
+function createCard(data, elementTemplate) {
+    const card = new Card(data, elementTemplate)
+    constants.elementGrid.prepend(card.renderCard());
+}
+
 /* Условия для закрытия попапа */
-function closePopUpOptions(e) {
+function isClosePopUpOptions(e) {
     return e.target.classList.contains('popup__close-button') ||
         (!e.target.classList.contains('popup__wrapper') && e.target.classList.contains('popup_opened')) ||
-        e.keyCode === 27
+        e.key === "Escape"
 }
+
+activateValidations()
