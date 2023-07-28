@@ -1,7 +1,6 @@
 export default class FormValidator {
-    constructor(data, formSelector) {
-        this._formSelector = formSelector;
-        this._form = this._getFormSelector();
+    constructor(data, form) {
+        this._form = form;
         this._inputSelector = data.inputSelector;
         this._submitButtonSelector = data.submitButtonSelector;
         this._inputErrorClass = data.inputErrorClass;
@@ -16,8 +15,9 @@ export default class FormValidator {
 
     checkValidation() {
         this._inputList.forEach((inputElement) => {
-            this._checkValidaty(inputElement);
+            this._hideInputError(inputElement);
         })
+        this.toggleButtonState();
     }
 
     /* Создание слушателей при вводе в инпуты */
@@ -36,10 +36,6 @@ export default class FormValidator {
     _checkValidaty(inputElement) {
         this._checkInputValidity(inputElement);
         this.toggleButtonState()
-    }
-
-    _getFormSelector() {
-        return document.querySelector(this._formSelector)
     }
 
     /* Проверка валидации инпута */

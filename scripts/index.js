@@ -3,8 +3,8 @@ import FormValidator from "./FormValidator.mjs";
 import Card from './Card.mjs'
 
 /* валидаторы*/
-const validatyProfile = new FormValidator(constants.validatyParams, '.popup__container_profile');
-const validatyPlace = new FormValidator(constants.validatyParams, '.popup__container_place')
+const validatyProfile = new FormValidator(constants.validatyParams, constants.popUpSave);
+const validatyPlace = new FormValidator(constants.validatyParams, constants.popUpAdd)
 
 
 /* Отрисовка всех имеющихся карточек из массива initialCards */
@@ -53,9 +53,7 @@ export function openPopUp(popup) {
 export function closePopUp(popup) {
     removeEventListenerEsc()
     popup.classList.add('popup_closed');
-    setTimeout(function () {
-        popup.classList.remove('popup_opened');
-    }, 190);
+    popup.classList.remove('popup_opened');
 }
 
 /*Функция скрывает или показывает попАп профиль */

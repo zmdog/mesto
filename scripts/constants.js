@@ -49,9 +49,6 @@ export const popUpTitle = popUpModalImage.querySelector('.popup__title');
 /* формы попапов*/
 export const popUpSave = document.querySelector('.popup__container_profile');
 export const popUpAdd = document.querySelector('.popup__container_place');
-/* кнопки форм*/
-export const popUpSaveButton = popUpSave.querySelector('.popup__submit-button');
-export const popUpAddButton = popUpAdd.querySelector('.popup__submit-button');
 /* контейнер для карточек*/
 export const elementGrid = document.querySelector(".elements__elements-grid");
 /* Элементы шапки профиля */

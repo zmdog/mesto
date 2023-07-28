@@ -1,13 +1,3 @@
-@keyframes fade-Out {
-    0% {
-        opacity: 1;
-    }
-
-    100% {
-        opacity: 0;
-    }
-}
-
 .popup_closed {
-    animation: fade-Out 0.2s ease-in-out;
+    opacity: 0;
 }
