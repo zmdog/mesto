@@ -1,10 +1,9 @@
-import {setPopUpImageState} from "./index.js";
-
 export default class Card {
-    constructor(data, elementTemplate){
+    constructor(data, elementTemplate, handleCardClick) {
         this._name = data.name;
         this._link = data.link;
         this._templateSelector = elementTemplate;
+        this._handleCardClick = handleCardClick
     }
 
     _getTemplate() {
@@ -13,6 +12,7 @@ export default class Card {
             .querySelector('.wrapper-element')
             .cloneNode(true);
     }
+
     _createCard() {
         const altText = 'Фото ' + this._name;
 
@@ -34,15 +34,18 @@ export default class Card {
         this._createCard()
         return this._element
     }
+
     _toggleLikeStatus() {
         this._elementBtn.classList.toggle('element__like_active');
     }
+
     _deleteCard() {
         this._element.remove();
     }
+
     _setEvents() {
         this._elementDelete.addEventListener('click', () => this._deleteCard());
         this._elementBtn.addEventListener('click', () => this._toggleLikeStatus());
-        this._photo.addEventListener('click', event => setPopUpImageState(event));
+        this._photo.addEventListener('click', event => this._handleCardClick(event));
     }
 }
