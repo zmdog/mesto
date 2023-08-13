@@ -51,7 +51,6 @@ const popUpModalPlace = new PopupWithForm({
         const card = new Card(callBack().call(popUpModalPlace), ".element-template", event => popUpModalImage.open(
             event.target.closest('.element').querySelector('.element__title').textContent,
             event.target.src))
-        console.log(callBack().call(popUpModalPlace))
         renderCards.addItem(card.renderCard())
         formValidators.addPlace.toggleButtonState()
         popUpModalPlace.close()
