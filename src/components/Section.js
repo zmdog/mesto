@@ -6,14 +6,14 @@ export default class Section {
         this._container = document.querySelector(selector);
     }
 
-    addItem(elem) {
-        this._render({name: elem.name, link: elem.link}, ".element-template", this._container)
+    addItem(card) {
+        this._container.prepend(card)
     }
 
     renderItems() {
 
         this._items.forEach(elem => {
-            this.addItem(elem)
+            this._render(elem)
         })
     }
 

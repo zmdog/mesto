@@ -9,11 +9,11 @@ export default class PopupWithImage extends Popup {
         this._popupTitle = this.popup.querySelector('.popup__title')
     }
 
-    open(event) {
-        this._popupImage.src = event.target.src;
-        this._popupImage.ariaLabel = event.target.ariaLabel;
-        this._popupImage.alt = event.target.alt;
-        this._popupTitle.textContent = event.target.closest('.element').querySelector('.element__title').textContent;
+    open(name, link) {
+        this._popupImage.src = link;
+        this._popupImage.ariaLabel = name;
+        this._popupImage.alt = name;
+        this._popupTitle.textContent = name;
 
         super.open()
     }

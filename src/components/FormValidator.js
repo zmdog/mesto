@@ -66,21 +66,21 @@ export default class FormValidator {
     /* Деактивация/активация кнопки подтверждения при условии*/
     toggleButtonState() {
         if (this._hasInvalidInput()) {
-            this._toggleButtonActivity()
+            this._enableButton()
         } else {
-            this._toggleButtonInactivity()
+            this._disableButton()
         }
     }
 
     /* Активация кнопки подтверждения */
-    _toggleButtonActivity() {
+    _enableButton() {
         this._buttonElement.disabled = false
         this._buttonElement.classList.remove(this.submitInactiveButtonSelector)
         this._buttonElement.classList.add(this.submitActiveButtonSelector)
     }
 
     /* Деактивация кнопки подтверждения */
-    _toggleButtonInactivity() {
+    _disableButton() {
         this._buttonElement.disabled = true
         this._buttonElement.classList.add(this.submitInactiveButtonSelector)
         this._buttonElement.classList.remove(this.submitActiveButtonSelector)

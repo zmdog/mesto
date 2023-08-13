@@ -26,6 +26,7 @@ export const cards = [
 ]
 /* Общие параметры для валидации */
 export const validatyParams = {
+    formSelector: '.popup__container',
     inputSelector: '.popup__edit',
     submitButtonSelector: 'popup__submit-button',
     inputErrorClass: 'popup__input-error',
@@ -38,8 +39,5 @@ export const popUpModalPlace = document.querySelector(".popup_place");
 /* инпуты попапа место */
 export const popUpPlace = popUpModalPlace.querySelector(".popup__edit[name='place']");
 export const popUpLink = popUpModalPlace.querySelector(".popup__edit[name='link']");
-/* формы попапов*/
-export const popUpSave = document.querySelector('.popup__container_profile');
-export const popUpAdd = document.querySelector('.popup__container_place');
 export const profileAddButton = document.querySelector('.profile__add-button');
 export const profileEditButton = document.querySelector('.profile__edit-button');

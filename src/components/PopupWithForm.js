@@ -1,16 +1,28 @@
 import Popup from "./Popup";
 
 export default class PopupWithForm extends Popup {
-    constructor(selector, handlerSubmit, replaceInputs) {
+    constructor({selector, handlerSubmit}) {
         super(selector);
-        this._replaceInputs = replaceInputs
-        this._handlerSubmit = handlerSubmit
+        /* Для передачи параметра(функции) делаю привязку с параметром к пустому контексту, далее в index.js вызываю функцию(параметр) в контексте необходимого объекта */
+        this._handlerSubmit = handlerSubmit.bind("", () => this._getInputValues)
+
         this._form = this.popup.querySelector('.popup__container')
+        this._inputList = this._form.querySelectorAll('.popup__edit')
+        this._formValues = {}
     }
 
     _getInputValues() {
-        this._popUpName = this._form.querySelector(".popup__edit[name='name']");
-        this._popUpStatus = this._form.querySelector(".popup__edit[name='status']");
+
+        this._inputList.forEach(input => {
+            this._formValues[input.name] = input.value;
+        });
+        return this._formValues;
+    }
+
+    _setInputValues(data) {
+        this._inputList.forEach(input => {
+            input.value = data[input.name];
+        });
     }
 
     setEventListeners() {
@@ -25,12 +37,8 @@ export default class PopupWithForm extends Popup {
         super.removeEventListeners()
     }
 
-    open() {
-        this._getInputValues()
-        if (this._replaceInputs) {
-            this._popUpName.value = this._replaceInputs().name.textContent
-            this._popUpStatus.value = this._replaceInputs().status.textContent
-        }
+    open(preOpenPopup) {
+        if (preOpenPopup()) this._setInputValues(preOpenPopup())
         super.open()
     }
 
