@@ -9,6 +9,7 @@ export default class PopupDeleteCard extends Popup {
         this._handlerSubmit = () => handlerSubmit()
 
     }
+
     initialisationPopup() {
         super.initialisationPopup();
         this.setEventListeners()
@@ -18,6 +19,7 @@ export default class PopupDeleteCard extends Popup {
         this._form.addEventListener('submit', this._handlerSubmit);
         super.setEventListeners()
     }
+
     open(card) {
         this.card = card
 

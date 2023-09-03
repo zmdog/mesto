@@ -8,6 +8,7 @@ export default class PopupWithForm extends Popup {
         this._inputList = this._form.querySelectorAll('.popup__edit')
         this.formValues = {}
     }
+
     initialisationPopup() {
         this._handlerSubmit = () => {
             this._handler(this._getInputValues())

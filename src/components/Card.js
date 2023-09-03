@@ -17,21 +17,26 @@ export default class Card {
             return person._id === this.cardId
         })
     }
+
     _deleteButton() {
-        if(!(this.ownerId === this.cardId)) this._elementDelete.classList.add('element__delete_removed')
+        if (!(this.ownerId === this.cardId)) this._elementDelete.classList.add('element__delete_removed')
     }
+
     _getTemplate() {
         return document.querySelector(this._templateSelector)
             .content
             .querySelector('.wrapper-element')
             .cloneNode(true);
     }
+
     getId() {
         return this._id
     }
+
     getLikeStatus() {
         return this._likeStatus()
     }
+
     deleteCard() {
         this._element.remove();
     }
@@ -53,28 +58,32 @@ export default class Card {
         this._elementBtn.ariaLabel = 'Поставить лайк фото ' + this._name;
         this._elementLikes.textContent = this._likes.length
         this._deleteButton()
-        if(this._likeStatus()){
+        if (this._likeStatus()) {
             this.makeLike(card)
 
-        }else this.removeLike(card)
+        } else this.removeLike(card)
     }
 
     renderCard(card) {
         this._createCard(card)
         return this._element
     }
+
     countLikes(card) {
         this._elementLikes.textContent = card.likes.length
         this._likes = card.likes
     }
+
     makeLike(card) {
         this.countLikes(card)
         this._elementBtn.classList.add('element__like_active');
     }
+
     removeLike(card) {
         this.countLikes(card)
         this._elementBtn.classList.remove('element__like_active');
     }
+
     _setEvents() {
         this._elementDelete.addEventListener('click', () => this._handleDeleteCard());
         this._elementBtn.addEventListener('click', () => this._handleLikeCard());

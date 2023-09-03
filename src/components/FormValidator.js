@@ -78,10 +78,12 @@ export default class FormValidator {
         this._buttonElement.classList.add(this.submitInactiveButtonSelector)
         this._buttonElement.classList.remove(this.submitActiveButtonSelector)
     }
+
     fetchButton() {
         this._buttonElement.disabled = true
         this._buttonElement.textContent = 'Сохранение...'
     }
+
     fetchedButton(textButton) {
         this._buttonElement.disabled = false
         this._buttonElement.textContent = textButton

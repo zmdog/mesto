@@ -15,6 +15,7 @@ class Api {
                 return this._getResponseData(res)
             });
     }
+
     getInfoProfile() {
         return fetch(this._profileInfo, {
             headers: this._options.headers
@@ -23,6 +24,7 @@ class Api {
                 return this._getResponseData(res)
             });
     }
+
     setInfoProfile(data) {
 
         return fetch(this._profileInfo, {
@@ -37,6 +39,7 @@ class Api {
                 return this._getResponseData(res)
             });
     }
+
     setInfoAvatar(data) {
 
         return fetch(this._profileAvatar, {
@@ -50,6 +53,7 @@ class Api {
                 return this._getResponseData(res)
             });
     }
+
     postCard(data) {
 
         return fetch(this._cardsUrl, {
@@ -64,6 +68,7 @@ class Api {
                 return this._getResponseData(res)
             });
     }
+
     deleteCard(id) {
         return fetch(`${this._cardsUrl}/${id}`, {
             method: 'DELETE',
@@ -73,6 +78,7 @@ class Api {
                 return this._getResponseData(res)
             });
     }
+
     makeLike(id) {
         return fetch(`${this._cardsUrl}/${id}/likes`, {
             method: 'PUT',
@@ -82,6 +88,7 @@ class Api {
                 return this._getResponseData(res)
             });
     }
+
     removeLike(id) {
         return fetch(`${this._cardsUrl}/${id}/likes`, {
             method: 'DELETE',
@@ -91,6 +98,7 @@ class Api {
                 return this._getResponseData(res)
             });
     }
+
     _getResponseData(res) {
         if (res.ok) {
             return res.json()
