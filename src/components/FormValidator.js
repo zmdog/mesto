@@ -13,13 +13,6 @@ export default class FormValidator {
         this._setEventListeners();
     }
 
-    checkValidation() {
-        this._inputList.forEach((inputElement) => {
-            this._hideInputError(inputElement);
-        })
-        this.toggleButtonState();
-    }
-
     /* Создание слушателей при вводе в инпуты */
     _setEventListeners() {
         this._inputList = Array.from(this._form.querySelectorAll(this._inputSelector));
@@ -84,6 +77,14 @@ export default class FormValidator {
         this._buttonElement.disabled = true
         this._buttonElement.classList.add(this.submitInactiveButtonSelector)
         this._buttonElement.classList.remove(this.submitActiveButtonSelector)
+    }
+    fetchButton() {
+        this._buttonElement.disabled = true
+        this._buttonElement.textContent = 'Сохранение...'
+    }
+    fetchedButton(textButton) {
+        this._buttonElement.disabled = false
+        this._buttonElement.textContent = textButton
     }
 
     /* Проверка всех инпутов для кнопки подтверждения */

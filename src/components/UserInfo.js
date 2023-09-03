@@ -1,20 +1,28 @@
 export default class UserInfo {
 
-    constructor({selectorName, selectorStatus}) {
+    constructor({promise, selectorName, selectorStatus, selectorAvatar}) {
 
-        this._name = document.querySelector(selectorName);
-        this._status = document.querySelector(selectorStatus);
+        this.promise = promise
+        this.name = document.querySelector(selectorName);
+        this.status = document.querySelector(selectorStatus);
+        this.avatar = document.querySelector(selectorAvatar);
     }
 
     getUserInfo() {
         return {
-            name: this._name.textContent,
-            status: this._status.textContent
+            name: this.name.textContent,
+            status: this.status.textContent
         }
     }
+    setUserInfo(userInfo) {
 
-    setUserInfo(data) {
-        this._name.textContent = data.name
-        this._status.textContent = data.status
+        this.userInfo = userInfo
+        this.name.textContent = userInfo.name
+        this.status.textContent = userInfo.about
+        this.avatar.src = userInfo.avatar
+    }
+
+    renderingInfoProfile() {
+        this.promise()
     }
 }

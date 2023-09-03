@@ -14,17 +14,19 @@
     </header>
     <main class="content">
         <section class="profile" aria-label="Шапка профиля">
-            <img class="profile__avatar" src="<%=require('./images/kusto.jpg')%>" alt="Иконка профиля">
+            <button class=" button profile__change-button">
+                <img class="profile__avatar" alt="Иконка профиля">
+            </button>
             <div class="profile__info">
                 <div class="profile__wrapper">
-                    <h1 class="profile__name">Жак-Ив Кусто</h1>
+                    <h1 class="profile__name"></h1>
                     <button title="Изменить имя и статус профиля"
                             aria-label="Изменить имя и статус профиля"
                             type="button"
                             class="button profile__edit-button">
                     </button>
                 </div>
-                <p class="profile__status">Исследователь океана</p>
+                <p class="profile__status"></p>
             </div>
             <button title="Добавить новое Место"
                     aria-label="Добавить новое Место"
@@ -39,6 +41,30 @@
     <footer class="footer">
         <p lang="en" class="footer__copyright">&#169; 2020 Mesto Russia</p>
     </footer>
+    <div class="popup popup_avatar popup_closed">
+        <div class="popup__wrapper popup__wrapper_default">
+            <button
+                    title="Закрыть модальное окно"
+                    aria-label="Закрыть модальное окно"
+                    type="button"
+                    class="button popup__close-button popup__close-button_profile">
+            </button>
+            <h2 class="popup__purpose">Обновить аватар</h2>
+            <form novalidate name="changeAvatar" class="popup__container popup__container_profile">
+                <fieldset class="popup__set">
+                    <label class="popup__field">
+                        <input type="url" class="popup__edit" name="link" id="input-avatar" placeholder="Ссылка на картинку"
+                               required>
+                        <span class="popup__input-error input-avatar-error"></span>
+                    </label>
+                </fieldset>
+                <button aria-label="Сохранить" type="submit"
+                        class="button popup__submit-button popup__submit-button_inactive popup__submit-button_profile">
+                    Сохранить
+                </button>
+            </form>
+        </div>
+    </div>
     <div class="popup popup_profile popup_closed">
         <div class="popup__wrapper popup__wrapper_default">
             <button
@@ -51,7 +77,7 @@
             <form novalidate name="changeProfile" class="popup__container popup__container_profile">
                 <fieldset class="popup__set">
                     <label class="popup__field">
-                        <input type="text" class="popup__edit" name="name" id="input-name" required minlength="2"
+                        <input type="text" class="popup__edit" placeholder="Ссылка на изображение" name="name" id="input-name" required minlength="2"
                                maxlength="40">
                         <span class="popup__input-error input-name-error"></span>
                     </label>
@@ -103,6 +129,23 @@
             </form>
         </div>
     </div>
+    <div class="popup popup_delete popup_closed">
+        <div class="popup__wrapper popup__wrapper_default">
+            <button
+                    title="Закрыть модальное окно"
+                    aria-label="Закрыть модальное окно"
+                    type="button"
+                    class="button popup__close-button popup__close-button_place">
+            </button>
+            <h2 class="popup__purpose">Вы уверены?</h2>
+            <form novalidate name="addPlace" class="popup__container popup__container_place">
+                <button aria-label="Сохранить изменения" type="submit"
+                        class="button popup__submit-button popup__submit-button_active popup__submit-button_place">
+                    Да
+                </button>
+            </form>
+        </div>
+    </div>
     <div class="popup popup_image popup_closed">
         <div class="popup__wrapper popup__wrapper_image">
             <button
@@ -124,8 +167,11 @@
             <img src="/" class="element__photo" alt="">
             <div class="element__label">
                 <h2 class="element__title"></h2>
-                <button aria-label="" type="button"
-                        class="button element__like"></button>
+                <div class="element__group">
+                    <button aria-label="" type="button"
+                            class="button element__like"></button>
+                    <p class="element__counter_like">0</p>
+                </div>
             </div>
         </article>
     </li>

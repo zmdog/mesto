@@ -1,9 +1,22 @@
 export default class Card {
-    constructor(data, elementTemplate, handleCardClick) {
-        this._name = data.name;
-        this._link = data.link;
+    constructor({item, info}, elementTemplate, handleClickCard, handleDeleteCard, handleLikeCard) {
+        this.id = item._id
+        this.name = item.name;
+        this._link = item.link;
+        this.likes = item.likes
         this._templateSelector = elementTemplate;
-        this._handleCardClick = handleCardClick
+        this._handleClickCard = handleClickCard
+        this._handleDeleteCard = handleDeleteCard
+        this._handleLikeCard = handleLikeCard
+        this._deleteButton = () => {
+            if(!(item.owner.name === info.name)) this._elementDelete.classList.add('element__delete_removed')
+        }
+        this.likeStatus = () => {
+
+            return this.likes.find((person) => {
+                return person.name === info.name
+            })
+        }
     }
 
     _getTemplate() {
@@ -12,22 +25,31 @@ export default class Card {
             .querySelector('.wrapper-element')
             .cloneNode(true);
     }
+    deleteCard() {
+        this._element.remove();
+    }
 
     _createCard() {
-        const altText = 'Фото ' + this._name;
-
+        const altText = 'Фото ' + this.name;
         this._element = this._getTemplate();
         this._photo = this._element.querySelector('.element__photo');
         this._elementTitle = this._element.querySelector('.element__title');
         this._elementBtn = this._element.querySelector('.element__like');
         this._elementDelete = this._element.querySelector('.element__delete');
+        this._elementLikes = this._element.querySelector('.element__counter_like');
         this._setEvents();
 
         this._photo.src = this._link;
         this._photo.alt = altText;
         this._photo.ariaLabel = altText;
-        this._elementTitle.textContent = this._name;
-        this._elementBtn.ariaLabel = 'Поставить лайк фото ' + this._name;
+        this._elementTitle.textContent = this.name;
+        this._elementBtn.ariaLabel = 'Поставить лайк фото ' + this.name;
+        this._elementLikes.textContent = this.likes.length
+        this._deleteButton()
+        if(this.likeStatus()){
+            this.makeLike()
+
+        }else this.removeLike()
     }
 
     renderCard() {
@@ -35,17 +57,23 @@ export default class Card {
         return this._element
     }
 
-    _toggleLikeStatus() {
-        this._elementBtn.classList.toggle('element__like_active');
+    makeLike() {
+        this._elementBtn.classList.add('element__like_active');
     }
 
-    _deleteCard() {
-        this._element.remove();
+    removeLike() {
+        this._elementBtn.classList.remove('element__like_active');
     }
 
+    rerenderCard(card) {
+        this.name = card.name;
+        this._link = card.link;
+        this.likes = card.likes
+        this._elementLikes.textContent = this.likes.length
+    }
     _setEvents() {
-        this._elementDelete.addEventListener('click', () => this._deleteCard());
-        this._elementBtn.addEventListener('click', () => this._toggleLikeStatus());
-        this._photo.addEventListener('click', event => this._handleCardClick(event));
+        this._elementDelete.addEventListener('click', () => this._handleDeleteCard());
+        this._elementBtn.addEventListener('click', () => this._handleLikeCard());
+        this._photo.addEventListener('click', event => this._handleClickCard(event));
     }
 }
