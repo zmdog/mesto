@@ -1,8 +1,7 @@
 export default class UserInfo {
 
-    constructor({promise, selectorName, selectorStatus, selectorAvatar}) {
+    constructor({selectorName, selectorStatus, selectorAvatar}) {
 
-        this.promise = promise
         this.name = document.querySelector(selectorName);
         this.status = document.querySelector(selectorStatus);
         this.avatar = document.querySelector(selectorAvatar);
@@ -14,15 +13,10 @@ export default class UserInfo {
             status: this.status.textContent
         }
     }
-    setUserInfo(userInfo) {
 
-        this.userInfo = userInfo
-        this.name.textContent = userInfo.name
-        this.status.textContent = userInfo.about
-        this.avatar.src = userInfo.avatar
-    }
-
-    renderingInfoProfile() {
-        this.promise()
+    renderingInfoProfile(info) {
+        this.name.textContent = info.name
+        this.status.textContent = info.about
+        this.avatar.src = info.avatar
     }
 }

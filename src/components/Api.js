@@ -12,11 +12,7 @@ class Api {
             headers: this._options.headers
         })
             .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-
-                return Promise.reject(`Ошибка: ${res.status}`);
+                return this._getResponseData(res)
             });
     }
     getInfoProfile() {
@@ -24,16 +20,11 @@ class Api {
             headers: this._options.headers
         })
             .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-
-                return Promise.reject(`Ошибка: ${res.status}`);
+                return this._getResponseData(res)
             });
     }
-    setInfoProfile(data, form) {
+    setInfoProfile(data) {
 
-        form.fetchButton()
         return fetch(this._profileInfo, {
             method: 'PATCH',
             headers: this._options.headers,
@@ -43,16 +34,11 @@ class Api {
             })
         })
             .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-
-                return Promise.reject(`Ошибка: ${res.status}`);
+                return this._getResponseData(res)
             });
     }
-    setInfoAvatar(data, form) {
+    setInfoAvatar(data) {
 
-        form.fetchButton()
         return fetch(this._profileAvatar, {
             method: 'PATCH',
             headers: this._options.headers,
@@ -61,16 +47,11 @@ class Api {
             })
         })
             .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-
-                return Promise.reject(`Ошибка: ${res.status}`);
+                return this._getResponseData(res)
             });
     }
-    postCard(data, form) {
+    postCard(data) {
 
-        form.fetchButton()
         return fetch(this._cardsUrl, {
             method: 'POST',
             headers: this._options.headers,
@@ -80,11 +61,7 @@ class Api {
             })
         })
             .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-
-                return Promise.reject(`Ошибка: ${res.status}`);
+                return this._getResponseData(res)
             });
     }
     deleteCard(id) {
@@ -93,11 +70,7 @@ class Api {
             headers: this._options.headers
         })
             .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-
-                return Promise.reject(`Ошибка: ${res.status}`);
+                return this._getResponseData(res)
             });
     }
     makeLike(id) {
@@ -106,11 +79,7 @@ class Api {
             headers: this._options.headers
         })
             .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-
-                return Promise.reject(`Ошибка: ${res.status}`);
+                return this._getResponseData(res)
             });
     }
     removeLike(id) {
@@ -119,12 +88,15 @@ class Api {
             headers: this._options.headers
         })
             .then(res => {
-                if (res.ok) {
-                    return res.json()
-                }
-
-                return Promise.reject(`Ошибка: ${res.status}`);
+                return this._getResponseData(res)
             });
+    }
+    _getResponseData(res) {
+        if (res.ok) {
+            return res.json()
+        }
+
+        return Promise.reject(`Ошибка: ${res.status}`);
     }
 
 }

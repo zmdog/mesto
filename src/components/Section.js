@@ -1,7 +1,6 @@
 export default class Section {
-    constructor({promise}, selector) {
+    constructor(selector) {
 
-        this._promise = promise;
         this._container = document.querySelector(selector);
     }
 
@@ -12,8 +11,10 @@ export default class Section {
         this._container.prepend(card)
     }
 
-    renderItems() {
-        this._promise()
+    renderItems(cards) {
+        cards.forEach((card) => {
+            this.addItemAppend(card)
+        })
     }
 
 }
